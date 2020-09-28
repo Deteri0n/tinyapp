@@ -12,6 +12,10 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+function generateRandomString() {
+  newTodo.id = Math.random().toString(36).substring(2,8);
+}
+
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
