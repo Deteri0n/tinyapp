@@ -13,7 +13,7 @@ const urlDatabase = {
 };
 
 function generateRandomString() {
-  newTodo.id = Math.random().toString(36).substring(2,8);
+  return Math.random().toString(36).substring(2,8);
 }
 
 app.get("/", (req, res) => {
@@ -39,8 +39,10 @@ app.get("/urls/:shortURL", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  console.log(req.body);  // Log the POST request body to the console
-  res.send("Ok");         // Respond with 'Ok' (we will replace this)
+  let id = generateRandomString();
+  urlDatabase[id] = req.body.longURL;
+  const templateVars = { shortURL: id, longURL : req.body.longURL };
+  res.render("urls_show", templateVars);
 });
 
 app.listen(PORT, () => {
