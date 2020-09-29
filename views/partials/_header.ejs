@@ -16,8 +16,8 @@
             </form>
           <%} else {%>
             <form method="POST" class="form-inline" action="/logout">
-              <input name="username" type="text" placeholder="<%= username %>" style="width: 300px; margin:0 1em">
-              <button type="submit" class="btn btn-danger">Logout</button>
+              <a style="margin-left: 10em;">Logged In As: <%= username%></a>
+              <button type="submit" class="btn btn-danger" style="margin-left: 1em;">Logout</button>
             </form>
           <%} %>
         </div>
