@@ -26,8 +26,8 @@
             <td><%= url %></td>
             <td><%= urls[url] %></td>
             <td>
-              <form method="POST" action="/urls/%= urls[url]%/delete">  
-                <button type="button" onclick="alert('Test')">Delete</button>
+              <form method="POST" action="/urls/<%= url %>/delete" id="form1">  
+                <button type="submit" form="form1" value="Submit">Delete</button>
               </form>
             </td>
           </tr>
