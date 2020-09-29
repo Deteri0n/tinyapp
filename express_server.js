@@ -36,7 +36,7 @@ app.get("/urls", (req, res) => {
 
 app.get("/urls/new", (req, res) => {
   const templateVars = {
-    username: req.cookies["username"], 
+    username: req.cookies["username"],
   };
   res.render("urls_new", templateVars);
 });
@@ -62,7 +62,7 @@ app.post("/urls", (req, res) => {
   const templateVars = {
     username: req.cookies["username"],
     shortURL: id,
-    longURL : req.body.longURL 
+    longURL : req.body.longURL
   };
   res.render("urls_show", templateVars);
 });
@@ -78,8 +78,12 @@ app.post("/urls/:shortURL/update", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  console.log(req.body);
   res.cookie("username", req.body.username);
+  res.redirect("/urls");
+});
+
+app.post("/logout", (req, res) => {
+  res.clearCookie("username");
   res.redirect("/urls");
 });
 
