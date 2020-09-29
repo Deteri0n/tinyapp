@@ -16,6 +16,8 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+const users = {};
+
 let generateRandomString = () => Math.random().toString(36).substring(2,8);
 
 app.get("/", (req, res) => {
@@ -79,6 +81,17 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 app.post("/urls/:shortURL/update", (req, res) => {
   urlDatabase[req.params.shortURL] = req.body.longURL;
   res.redirect("/urls");
+});
+
+app.post("/register", (req, res) => {
+  let userId = generateRandomString();
+  users[userId] = {
+    userId,
+    email: req.body.email,
+    password: req.body.password
+  };
+  res.cookie("user_id", userId);
+  res.redirect("urls");
 });
 
 app.post("/login", (req, res) => {
