@@ -33,6 +33,17 @@ let emailLookUp = (emailString, objOfObj) => {
   return null;
 };
 
+/*Return an object of objects which contain the id provided */
+let urlsForUser = (id, objOfObj) => {
+  let result = {};
+  for (let o in objOfObj) {
+    if (objOfObj[o].userID === id) {
+      result[o] = objOfObj[o];
+    }
+  }
+  return result;
+};
+
 //Methods handling
 
 app.get("/", (req, res) => {
@@ -44,11 +55,15 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  const templateVars = {
-    urls: urlDatabase,
-    user: users[req.cookies.user_id] ? users[req.cookies.user_id] : null,
-  };
-  res.render("urls_index", templateVars);
+  if (req.cookies && Object.keys(req.cookies).length) {
+    const templateVars = {
+      urls: urlsForUser(req.cookies.user_id, urlDatabase),
+      user: users[req.cookies.user_id] ? users[req.cookies.user_id] : null,
+    };
+    res.render("urls_index", templateVars);
+  } else {
+    res.send("You must be registered or logged in to see the content of this page").end();
+  }
 });
 
 app.get("/urls/new", (req, res) => {
