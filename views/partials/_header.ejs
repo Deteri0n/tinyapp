@@ -9,10 +9,9 @@
         <a class="nav-item nav-link" href="/urls">My URLs</a>
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
         <div>
-          <% if(user["email"] === undefined) { %>
-            <form method="POST" class="form-inline" action="/login">
-              <input name="email" type="text" placeholder="Email" style="width: 300px; margin:0 1em">
-              <button type="submit" class="btn btn-primary">Login</button>
+          <% if(!user) { %>
+            <form method="GET" action="/login/">  
+              <button class="btn btn-outline-primary" type="submit" value="Submit">Login</button>
             </form>
           <%} else {%>
             <form method="POST" class="form-inline" action="/logout">
