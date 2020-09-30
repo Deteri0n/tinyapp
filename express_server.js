@@ -16,7 +16,13 @@ const urlDatabase = {
   i3BoGr: { longURL: "https://www.google.ca", userID: "aJ48lW" }
 };
 
-const users = {};
+const users = {
+  aJ48lW: {
+    userId: 'aJ48lW',
+    email: 'test@test.com',
+    password: 'qwerty'
+  }
+};
 
 
 //Functions
@@ -78,12 +84,18 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  const templateVars = {
-    user: users[req.cookies.user_id] ? users[req.cookies.user_id] : null,
-    shortURL: req.params.shortURL,
-    longURL : urlDatabase[req.params.shortURL].longURL
-  };
-  res.render("urls_show", templateVars);
+  if (urlDatabase[req.params.shortURL].userID === req.cookies.user_id) {
+    const templateVars = {
+      user: users[req.cookies.user_id] ? users[req.cookies.user_id] : null,
+      shortURL: req.params.shortURL,
+      longURL : urlDatabase[req.params.shortURL].longURL
+    };
+    res.render("urls_show", templateVars);
+  } else if (urlDatabase[req.params.shortURL].userID !== req.cookies.user_id && req.cookies.user_id) {
+    res.send("This is not one of your short URLs").end();
+  } else {
+    res.send("You must be registered or logged in to see the content of this page").end();
+  }
 });
 
 app.get("/u/:shortURL", (req, res) => {
