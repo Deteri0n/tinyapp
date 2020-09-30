@@ -46,21 +46,21 @@ app.get("/hello", (req, res) => {
 app.get("/urls", (req, res) => {
   const templateVars = {
     urls: urlDatabase,
-    user: users[req.cookies.user_id],
+    user: users[req.cookies.user_id] ? users[req.cookies.user_id] : null,
   };
   res.render("urls_index", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
   const templateVars = {
-    user: users[req.cookies.user_id],
+    user: users[req.cookies.user_id] ? users[req.cookies.user_id] : null,
   };
   res.render("urls_new", templateVars);
 });
 
 app.get("/urls/:shortURL", (req, res) => {
   const templateVars = {
-    user: users[req.cookies.user_id],
+    user: users[req.cookies.user_id] ? users[req.cookies.user_id] : null,
     shortURL: req.params.shortURL,
     longURL : urlDatabase[req.params.shortURL]
   };
@@ -76,12 +76,16 @@ app.get("/register", (req, res) => {
   res.render("register");
 });
 
+app.get("/login", (req, res) => {
+  res.render("login");
+});
+
 app.post("/urls", (req, res) => {
   let id = generateRandomString();
   urlDatabase[id] = req.body.longURL;
 
   const templateVars = {
-    user: users[req.cookies.user_id],
+    user: users[req.cookies.user_id] ? users[req.cookies.user_id] : null,
     shortURL: id,
     longURL : req.body.longURL
   };
