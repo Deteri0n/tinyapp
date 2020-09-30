@@ -23,14 +23,14 @@ const users = {};
 
 let generateRandomString = () => Math.random().toString(36).substring(2,8);
 
-//Look in an object if the string is included. Return true or false.
+/*Look in an object if the string is included. Return the user or null.*/
 let emailLookUp = (emailString, objOfObj) => {
   for (let o in objOfObj) {
     if (objOfObj[o].email === emailString) {
-      return true;
+      return objOfObj[o];
     }
   }
-  return false;
+  return null;
 };
 
 //Methods handling
@@ -120,8 +120,15 @@ app.post("/register", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  res.cookie("username", req.body.username);
-  res.redirect("/urls");
+  let {email, password} = req.body; 
+  let currentUser = emailLookUp(email, users); 
+  if (currentUser && password === currentUser.password) {
+    res.cookie(Object.keys(currentUser)[0]);
+    res.redirect("/urls");
+  } else {
+    res.status(403).send("Invalid email or password");
+  }
+  
 });
 
 app.post("/logout", (req, res) => {
