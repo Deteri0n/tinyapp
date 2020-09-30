@@ -103,7 +103,7 @@ app.post("/urls/:shortURL/update", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-  if (!req.body.email || !req.body.password) {
+  if (!req.body.email || !req.body.password) {
     res.status(404).send("Invalid email or password");
   } else if (emailLookUp(req.body.email, users)) {
     res.status(404).send("Email already taken");
@@ -120,10 +120,10 @@ app.post("/register", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  let {email, password} = req.body; 
-  let currentUser = emailLookUp(email, users); 
+  let {email, password} = req.body;
+  let currentUser = emailLookUp(email, users);
   if (currentUser && password === currentUser.password) {
-    res.cookie(Object.keys(currentUser)[0]);
+    res.cookie("user_id", currentUser.userId);
     res.redirect("/urls");
   } else {
     res.status(403).send("Invalid email or password");
@@ -132,7 +132,7 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/logout", (req, res) => {
-  res.clearCookie("username");
+  res.clearCookie("user_id");
   res.redirect("/urls");
 });
 
