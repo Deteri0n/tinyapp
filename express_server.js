@@ -18,7 +18,22 @@ const urlDatabase = {
 
 const users = {};
 
+
+//Functions
+
 let generateRandomString = () => Math.random().toString(36).substring(2,8);
+
+//Look in an object if the string is included. Return true or false.
+let emailLookUp = (emailString, objOfObj) => {
+  for (let o in objOfObj) {
+    if (objOfObj[o].email === emailString) {
+      return true;
+    }
+  }
+  return false;
+};
+
+//Methods handling
 
 app.get("/", (req, res) => {
   res.send("Hello!");
@@ -84,14 +99,20 @@ app.post("/urls/:shortURL/update", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-  let userId = generateRandomString();
-  users[userId] = {
-    userId,
-    email: req.body.email,
-    password: req.body.password
-  };
-  res.cookie("user_id", userId);
-  res.redirect("urls");
+  if (!req.body.email || !req.body.password) {
+    res.status(404).send("Invalid email or password").end();
+  } else if (emailLookUp(req.body.email, users)) {
+    res.status(404).send("Email already taken").end();
+  } else {
+    let userId = generateRandomString();
+    users[userId] = {
+      userId,
+      email: req.body.email,
+      password: req.body.password
+    };
+    res.cookie("user_id", userId);
+    res.redirect("urls");
+  }
 });
 
 app.post("/login", (req, res) => {
