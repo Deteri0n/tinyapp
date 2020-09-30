@@ -10,6 +10,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
+const {generateRandomString, emailLookUp, urlsForUser} = require('./helpers');
 
 const urlDatabase = {
   b6UTxQ: { longURL: "https://www.tsn.ca", userID: "aJ48lW" },
@@ -25,32 +26,9 @@ const users = {
 };
 
 
-//Functions
-
-let generateRandomString = () => Math.random().toString(36).substring(2,8);
-
-/*Look in an object if the string is included. Return the user or null.*/
-let emailLookUp = (emailString, objOfObj) => {
-  for (let o in objOfObj) {
-    if (objOfObj[o].email === emailString) {
-      return objOfObj[o];
-    }
-  }
-  return null;
-};
-
-/*Return an object of objects which contain the id provided */
-let urlsForUser = (id, objOfObj) => {
-  let result = {};
-  for (let o in objOfObj) {
-    if (objOfObj[o].userID === id) {
-      result[o] = objOfObj[o];
-    }
-  }
-  return result;
-};
-
-//Methods handling
+/*
+** GET Methods handling
+*/
 
 app.get("/", (req, res) => {
   res.send("Hello!");
@@ -117,6 +95,11 @@ app.get("/login", (req, res) => {
   res.render("login", templateVars);
 });
 
+
+/*
+** POST Methods handling
+*/
+
 app.post("/urls", (req, res) => {
   let idShortULR = generateRandomString();
   urlDatabase[idShortULR] = {
@@ -132,13 +115,25 @@ app.post("/urls", (req, res) => {
 });
 
 app.post("/urls/:shortURL/delete", (req, res) => {
-  delete urlDatabase[req.params.shortURL];
-  res.redirect("/urls");
+  if (urlDatabase[req.params.shortURL].userID === req.cookies.user_id) {
+    delete urlDatabase[req.params.shortURL];
+    res.redirect("/urls");
+  } else if (urlDatabase[req.params.shortURL].userID !== req.cookies.user_id && req.cookies.user_id) {
+    res.send("This is not one of your short URLs").end();
+  } else {
+    res.send("You must be registered or logged in to see the content of this page").end();
+  }
 });
 
 app.post("/urls/:shortURL/update", (req, res) => {
-  urlDatabase[req.params.shortURL].longURL = req.body.longURL;
-  res.redirect("/urls");
+  if (urlDatabase[req.params.shortURL].userID === req.cookies.user_id) {
+    urlDatabase[req.params.shortURL].longURL = req.body.longURL;
+    res.redirect("/urls");
+  } else if (urlDatabase[req.params.shortURL].userID !== req.cookies.user_id && req.cookies.user_id) {
+    res.send("This is not one of your short URLs").end();
+  } else {
+    res.send("You must be registered or logged in to see the content of this page").end();
+  }
 });
 
 app.post("/register", (req, res) => {
