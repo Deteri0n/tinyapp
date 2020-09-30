@@ -100,9 +100,9 @@ app.post("/urls/:shortURL/update", (req, res) => {
 
 app.post("/register", (req, res) => {
   if (!req.body.email || !req.body.password) {
-    res.status(404).send("Invalid email or password").end();
+    res.status(404).send("Invalid email or password");
   } else if (emailLookUp(req.body.email, users)) {
-    res.status(404).send("Email already taken").end();
+    res.status(404).send("Email already taken");
   } else {
     let userId = generateRandomString();
     users[userId] = {
