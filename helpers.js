@@ -27,4 +27,8 @@ const getUserId = (req) => req.session.user_id;
 /*Returns true or false of the request if the user is authentified or undefined*/
 const checkItsHisContent = (req, objOfObj) => objOfObj[req.params.shortURL].userID === getUserId(req);
 
-module.exports = {generateRandomString, getUserByEmail, urlsForUser, getUserId, checkItsHisContent};
+/*Returns the obj if the shortURL inside objOfObj exists, else returns undefined*/
+const getObj = (req, objOfObj) => objOfObj[req.params.shortURL];
+const getShortURL = (req) => req.params.shortURL;
+
+module.exports = {generateRandomString, getUserByEmail, urlsForUser, getUserId, checkItsHisContent, getObj, getShortURL};
