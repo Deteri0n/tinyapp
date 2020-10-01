@@ -145,7 +145,6 @@ app.post("/register", (req, res) => {
       email: req.body.email,
       password: hashedPassword
     };
-    console.log(users);
     res.cookie("user_id", userId);
     res.redirect("urls");
   }
