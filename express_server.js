@@ -10,6 +10,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
+const bcrypt = require("bcrypt");
+
 const {generateRandomString, emailLookUp, urlsForUser} = require('./helpers');
 
 const urlDatabase = {
@@ -143,11 +145,13 @@ app.post("/register", (req, res) => {
     res.status(404).send("Email already taken");
   } else {
     let userId = generateRandomString();
+    let hashedPassword = bcrypt.hashSync(req.body.password, 10);
     users[userId] = {
       userId,
       email: req.body.email,
-      password: req.body.password
+      password: hashedPassword
     };
+    console.log(users);
     res.cookie("user_id", userId);
     res.redirect("urls");
   }
