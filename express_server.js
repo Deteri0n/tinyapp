@@ -160,7 +160,8 @@ app.post("/register", (req, res) => {
 app.post("/login", (req, res) => {
   let {email, password} = req.body;
   let currentUser = emailLookUp(email, users);
-  if (currentUser && password === currentUser.password) {
+  let passwordIsCorrect = bcrypt.compareSync(password, hashedPassword);
+  if (currentUser && passwordIsCorrect) {
     res.cookie("user_id", currentUser.userId);
     res.redirect("/urls");
   } else {
