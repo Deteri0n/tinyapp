@@ -2,7 +2,7 @@
 const generateRandomString = () => Math.random().toString(36).substring(2,8);
 
 /*Looks in an object if the string is included. Returns the user or undefined*/
-const emailLookUp = (emailString, objOfObj) => {
+const getUserByEmail = (emailString, objOfObj) => {
   for (let o in objOfObj) {
     if (objOfObj[o].email === emailString) {
       return objOfObj[o];
@@ -27,4 +27,4 @@ const getUserId = (req) => req.session.user_id;
 /*Returns true or false of the request if the user is authentified or undefined*/
 const checkItsHisContent = (req, objOfObj) => objOfObj[req.params.shortURL].userID === getUserId(req);
 
-module.exports = {generateRandomString, emailLookUp, urlsForUser, getUserId, checkItsHisContent};
+module.exports = {generateRandomString, getUserByEmail, urlsForUser, getUserId, checkItsHisContent};

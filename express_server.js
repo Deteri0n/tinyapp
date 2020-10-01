@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cookieSession = require('cookie-session');
 const bcrypt = require("bcrypt");
-const {generateRandomString, emailLookUp, urlsForUser, getUserId, checkItsHisContent} = require('./helpers');
+const {generateRandomString, getUserByEmail, urlsForUser, getUserId, checkItsHisContent} = require('./helpers');
 
 const app = express();
 const PORT = 8080; // default port 8080
@@ -173,7 +173,7 @@ app.post("/urls/:shortURL/update", (req, res) => {
 
 app.post("/register", (req, res) => {
   let {email, password} = req.body;
-  let registeredUser = emailLookUp(email, users);
+  let registeredUser = getUserByEmail(email, users);
   
   if (!email || !password) {
     res.status(404).send("Invalid email or password");
@@ -196,7 +196,7 @@ app.post("/register", (req, res) => {
 
 app.post("/login", (req, res) => {
   let {email, password} = req.body;
-  let registeredUser = emailLookUp(email, users);
+  let registeredUser = getUserByEmail(email, users);
   
   if (registeredUser) {
     let passwordIsCorrect = bcrypt.compareSync(password, registeredUser.password);
