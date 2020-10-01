@@ -19,13 +19,7 @@ const urlDatabase = {
   i3BoGr: { longURL: "https://www.google.ca", userID: "aJ48lW" }
 };
 
-const users = {
-  aJ48lW: {
-    userId: 'aJ48lW',
-    email: 'test@test.com',
-    password: 'qwerty'
-  }
-};
+const users = {};
 
 
 /*
@@ -160,7 +154,7 @@ app.post("/register", (req, res) => {
 app.post("/login", (req, res) => {
   let {email, password} = req.body;
   let currentUser = emailLookUp(email, users);
-  let passwordIsCorrect = bcrypt.compareSync(password, hashedPassword);
+  let passwordIsCorrect = bcrypt.compareSync(password, currentUser.password);
   if (currentUser && passwordIsCorrect) {
     res.cookie("user_id", currentUser.userId);
     res.redirect("/urls");
